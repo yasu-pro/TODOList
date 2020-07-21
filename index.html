@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section>
+        <form action="#" id="form">
+            <input id="input" type="text" name="word">
+            <input id="add" type="button" value="追加"></button>
+        </form>
+    </section>
+
+    <script>
+        'use strict';
+        let id = 1 // global value
+        //setAttributes関数を作成し、第一引数には、const input = document.createElement('input');、第二引数にはsetAttributes(input, {type: "button", value: "削除", id: `${id}`})の{...}の部分のオブジェクトが入る。
+        function setAttributes(el, attrs) {
+        
+        //for..in文で35行目のsetAttributesオブジェクトのプロパティを全て取得。attrsにはオブジェクトが入っている*/
+        //elには33行目のconst input = document.createElement('input');が入っている。
+            for(var key in attrs) {
+                //{type: "button", value: "削除", id: `${id}`}のプロパティ名を第一引数へ、データを第二引数へ
+                //つまり、type: "button", value: "削除", id: `${id}`が設定された、input要素が作られる。
+                el.setAttribute(key, attrs[key]);
+            }
+        }
+            //createInput関数(削除機能を備えたid名が`${id}`のinput要素)を作成する。
+        const createInput = (id) => {
+            //input要素を作り、変数inputに代入する。
+            const input = document.createElement('input');
+            //setAttributes関数を呼び出す。
+            setAttributes(input, {type: "button", value: "削除", id: `${id}`})
+
+            //20~28行目で作られたtype: "button", value: "削除", id: `${id}`が設定された、input要素がクリックされたら発火する。
+            input.onclick = () => {
+                event.preventDefault();
+                deleate(id) 
+            }
+            //dekeate関数が実行されたらp要素自体が消える。
+            return input;
+        }
+        //クリックしたらp要素とp要素の子要素にinput要素を追加する関数
+        const onClickAdd = function(event) {
+            event.preventDefault();
+            //HTMLにあるidがinputの値を取得
+            const value = document.querySelector('#input').value;
+            //p要素を作成
+            const p = document.createElement('p');
+            //p要素のid名をクリックした回数を名前にする`hoge1`
+            p.setAttribute('id', `hoge${++id}`);
+            //inputに書かれたテキストをp要素に表示する。
+            p.textContent = value;
+            //セレクターbodyの最初にcreatElementで作ったp要素を子要素として追加<section>と<form>の間に<p>...<p>ができる。
+            document.querySelector('body').appendChild(p);
+            //作ったp要素の子要素として値がid(数値)のinput要素を作るcreateInput()関数を呼び出す。これが先生が作ったcreateInput関数。
+            p.appendChild(createInput(id));
+            
+        };
+        //HTMLのid名が#addのinput要素がクリックされると、上記で作ったonClickAddを発火
+        document.querySelector('#add').onclick =  onClickAdd
+
+        //作った要素p要素(id名がhoge${id})を削除する関数
+        function deleate (id) {
+            //id名が`#hoge${id}`のp要素セレクターを見つけて、変数targetに代入する。
+            const target = document.querySelector(`#hoge${id}`);
+            //セレクターがbodyの子要素にある、id名が`#hoge${id}`のセレクター(変数target)を削除する、
+            document.querySelector('body').removeChild(target);
+        };
+    </script>
+</body>
+</html>
